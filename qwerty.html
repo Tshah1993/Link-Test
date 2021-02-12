@@ -1,16 +1,138 @@
-<!DOCTYPE HTML>
-<html>
+   const dataSet = {
+        floor:{
+          "id" : 2,
+           rooms:[
+             {
+              "id" : 21,
+              "x"  : 0.0,
+              "y"  : 0.0,
+              "height" : 15,
+              "width" : 15,
+              "weight": 0.4,
+              "gap": 0.8,
+              "roomSize": 5,
+              "corridor": 2
 
-<body>
+             }
+           ]
+        }
+      }
+    
+      const roomData = dataSet.floor.rooms[0]
+      const { id
+           , x
+           , y
+          , height
+          , width
+          , weight
+          , gap
+          , roomSize
+          , corridor
+          } = roomData
 
-  <p>Before the script...</p>
+      const areaWidth = width - roomSize - 2 * weight
+      const areaHeight = roomSize - weight
+      const area = areaWidth * areaHeight
+      const areas = {
+        room1: area
+      , room2: area
+      , room3: area - weight * areaWidth
+      , room4: (roomSize - 2* weight) * (roomSize - 2* weight)
+      }
+  
+      let html = `<svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 ${width} ${height}"
+        style={style}
+      >
+         <path
+          d="M ${x},${y}
+             h ${width - roomSize}
+             v ${height - roomSize}
+             h ${roomSize}
+             v ${roomSize}
 
-  <script>
-    alert( 'Hello, world!' );
-  </script>
+             h -${roomSize + 2 * weight}
+             v -${weight}
+             h ${weight}
+             v -${weight}
+             h ${weight}
+             v ${weight}
 
-  <p>...After the script.</p>
+             h ${roomSize - weight}
+             v -${roomSize - 2 * weight}
+             h -${roomSize - weight}
+             v ${roomSize - 3 * weight - gap}
+             h -${weight}
 
-</body>
+             v -${height - 3 * weight - gap}
+             h -${width - roomSize - 2 * weight}
+             
+             v ${roomSize - weight}
+             h ${width - roomSize - 2 * weight - corridor}
+             v ${ weight}
+             h -${width - roomSize - 2 * weight - corridor}
 
-</html>
+             v ${roomSize - weight}         
+             h ${width - roomSize - 2 * weight - corridor}
+             v ${ weight}
+             h -${width - roomSize - 2 * weight - corridor}
+
+             v ${roomSize - 2 * weight}
+             h ${width - roomSize - 2 * weight - corridor}
+             v ${weight}
+             H 0
+             z
+            "
+        />
+        <rect
+          id="room1"
+          x="${weight}"
+          y="${weight}"
+          width="${width - roomSize - 2 * weight}"
+          height="${roomSize - weight}"
+          fill="#fee"
+        />
+        <rect
+          id="room2"
+          x="${weight}"
+          y="${roomSize + weight}"
+          width="${width - roomSize - 2 * weight}"
+          height="${roomSize - weight}"
+          fill="#efe"
+        />
+        <rect
+          id="room3"
+          x="${weight}"
+          y="${roomSize * 2 + weight}"
+          width="${width - roomSize - 2 * weight}"
+          height="${roomSize - 2 * weight}"
+          fill="#eef"
+        />
+        <rect
+          id="room4"
+          x="${width - roomSize}"
+          y="${roomSize * 2 + weight}"
+          width="${roomSize - weight}"
+          height="${roomSize - 2 * weight}"
+          fill="#fef"
+        />
+      </svg>
+      `
+     
+      const svg = document.createElement("svg")
+      svg.innerHTML = html
+
+      document.body.appendChild(svg)
+
+      const showArea = (event) => {
+        const id = event.target.id
+        const area = Math.round(areas[id])
+        console.log("Area " + area + " square feet")
+      }
+
+      const rooms = [...document.querySelectorAll("rect")]
+      rooms.forEach(room => {
+        room.addEventListener("mouseenter", showArea, false)
+      })
